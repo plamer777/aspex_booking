@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  api:
+    image: plamer88/aspex:fast_api-01
+    ports:
+      - '80:8000'
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      create_tables:
+        condition: service_completed_successfully
+
+  create_tables:
+    image: plamer88/aspex:fast_api-01
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+    command: python3 create_tables.py
+
+  db:
+    image: postgres:alpine
+    expose:
+      - 5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+    env_file: .env
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U plamer -d booking']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
