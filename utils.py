@@ -1,19 +1,28 @@
+"""This file contains utility functions"""
 from datetime import datetime, timedelta
 from calendar import timegm
 import jwt
 from fastapi import HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
 from constants import (
     JWT_SECRET, JWT_ALGO, JWT_EXP_HOURS, API_DESCRIPTION, README_FILE)
 from dao import SessionLocal
 # --------------------------------------------------------------------------
 
 
-async def get_db():
+async def get_db() -> AsyncSession:
+    """This function returns a database session
+    :return: AsyncSession instance
+    """
     async with SessionLocal() as db:
         return db
 
 
 def create_token(email: str) -> dict[str, str]:
+    """This function creates a new token
+    :param email: an email address to create a token for
+    :return: a dictionary containing access token
+    """
     token_data = {
         'email': email,
         'exp': timegm(
@@ -24,7 +33,10 @@ def create_token(email: str) -> dict[str, str]:
 
 
 def decode_token(access_token: str) -> dict[str, str]:
-
+    """This function serves to decode a provided token
+    :param access_token: a string representing the access token
+    :return: a dictionary containing extracted token data
+    """
     try:
         token = access_token.split('Bearer ')[-1]
         user_data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGO])

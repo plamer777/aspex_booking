@@ -39,7 +39,7 @@ JWT_EXP_HOURS = sets.JWT_EXP_HOURS
 TOKEN_URL = '/login'
 
 DEADLINE_HOURS = 1
-TZ = tz = timezone(timedelta(hours=sets.TZ_SHIFT))
+TZ = timezone(timedelta(hours=sets.TZ_SHIFT))
 
 API_TITLE = sets.API_TITLE
 API_DESCRIPTION = sets.API_DESCRIPTION
